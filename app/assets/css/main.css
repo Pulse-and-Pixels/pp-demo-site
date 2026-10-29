@@ -1,0 +1,147 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* ------------------------------------------------------------------
+ * Northstar design tokens
+ * ------------------------------------------------------------------ */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Deep night-sky neutrals */
+  --color-ink-50: #f5f7fb;
+  --color-ink-100: #e9edf5;
+  --color-ink-200: #d3d9e8;
+  --color-ink-300: #aab3cc;
+  --color-ink-400: #7a84a3;
+  --color-ink-500: #565f80;
+  --color-ink-600: #3f4766;
+  --color-ink-700: #2c3352;
+  --color-ink-800: #1b2140;
+  --color-ink-900: #111633;
+  --color-ink-950: #0b1026;
+
+  /* Brand: indigo-violet */
+  --color-brand-50: #eef0ff;
+  --color-brand-100: #e0e3ff;
+  --color-brand-200: #c6caff;
+  --color-brand-300: #a3a6fd;
+  --color-brand-400: #8279f9;
+  --color-brand-500: #6b57f2;
+  --color-brand-600: #5b3de6;
+  --color-brand-700: #4d30cb;
+  --color-brand-800: #3f2aa4;
+  --color-brand-900: #362882;
+  --color-brand-950: #21184c;
+
+  /* Accent: starlight cyan */
+  --color-accent-300: #67e8f9;
+  --color-accent-400: #22d3ee;
+  --color-accent-500: #06b6d4;
+  --color-accent-600: #0891b2;
+
+  --radius-card: 1.25rem;
+  --radius-panel: 2rem;
+
+  --shadow-card: 0 1px 2px rgb(11 16 38 / 0.04), 0 8px 24px -8px rgb(11 16 38 / 0.12);
+  --shadow-card-hover: 0 2px 4px rgb(11 16 38 / 0.06), 0 24px 48px -16px rgb(11 16 38 / 0.25);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-up: fade-up 0.7s var(--ease-out-soft) both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Page container and section rhythm */
+@utility container-page {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+}
+
+@utility section-y {
+  padding-block: 4.5rem;
+  @media (width >= 64rem) {
+    padding-block: 7rem;
+  }
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility bg-brand-gradient {
+  background-image:
+    radial-gradient(60rem 30rem at 85% -10%, rgb(34 211 238 / 0.28), transparent 60%),
+    radial-gradient(50rem 30rem at 0% 110%, rgb(107 87 242 / 0.45), transparent 60%),
+    linear-gradient(135deg, var(--color-ink-950), var(--color-brand-950) 55%, var(--color-ink-900));
+}
+
+@utility bg-soft-gradient {
+  background-image:
+    radial-gradient(50rem 24rem at 90% 0%, rgb(34 211 238 / 0.12), transparent 60%),
+    radial-gradient(40rem 24rem at 0% 100%, rgb(107 87 242 / 0.12), transparent 60%);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-white font-sans text-ink-700;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight text-ink-950;
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-ink-950;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Rich text: tuned typography plugin output */
+@layer components {
+  .prose-northstar {
+    @apply prose prose-lg max-w-none prose-headings:font-display prose-headings:tracking-tight prose-headings:text-ink-950 prose-a:font-medium prose-a:text-brand-600 prose-a:underline-offset-4 hover:prose-a:text-brand-700 prose-blockquote:border-brand-400 prose-blockquote:font-display prose-blockquote:not-italic prose-blockquote:text-ink-900 prose-strong:text-ink-950 prose-code:rounded prose-code:bg-ink-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-medium prose-code:before:content-none prose-code:after:content-none prose-li:marker:text-brand-500 prose-img:rounded-card text-ink-600;
+  }
+
+  .prose-invert-northstar {
+    @apply prose-invert prose-headings:text-white prose-strong:text-white prose-a:text-accent-300 hover:prose-a:text-accent-400 prose-blockquote:text-white text-ink-200;
+  }
+}

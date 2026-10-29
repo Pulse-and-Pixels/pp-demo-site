@@ -1,0 +1,47 @@
+{
+  "name": "pp-demo-site",
+  "type": "module",
+  "private": true,
+  "packageManager": "yarn@4.17.0",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 3000",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "start": "node .output/server/index.mjs",
+    "typecheck": "nuxt typecheck",
+    "verify:preview": "node scripts/verify-preview.mjs",
+    "verify:source-maps": "node scripts/verify-source-maps.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@lucide/vue": "^1.63.0",
+    "@nuxt/image": "^2.2.0",
+    "@nuxtjs/sanity": "^2.5.0",
+    "@portabletext/types": "^4.0.2",
+    "@portabletext/vue": "^2.0.0",
+    "@sanity/client": "^7.28.0",
+    "@sanity/image-url": "^2.1.1",
+    "@sanity/visual-editing-csm": "^3.0.19",
+    "@tailwindcss/vite": "^4.3.3",
+    "nuxt": "^4.6.3",
+    "tailwindcss": "^4.3.3",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0"
+  },
+  "devDependencies": {
+    "@oclif/core": "^4.8.0",
+    "@sanity/browserslist-config": "^1.0.5",
+    "@sanity/cli-core": "^2",
+    "@sanity/preview-url-secret": "^4.1.5",
+    "@tailwindcss/typography": "^0.5.20",
+    "@types/node": "^22",
+    "jiti": "^2.7.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.5",
+    "vue-tsc": "^3.3.13"
+  }
+}
