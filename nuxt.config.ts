@@ -11,14 +11,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-10-01',
   devtools: {enabled: true},
 
-  modules: ['@nuxtjs/sanity', '@nuxt/image'],
+  modules: ['@nuxtjs/sanity', '@nuxt/image', '@nuxtjs/i18n'],
 
   css: ['~/assets/css/main.css'],
   vite: {plugins: [tailwindcss()]},
 
   app: {
     head: {
-      htmlAttrs: {lang: 'en'},
       meta: [{name: 'theme-color', content: '#0b1026'}],
       link: [
         {rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg'},
@@ -55,6 +54,25 @@ export default defineNuxtConfig({
           previewMode: {enable: '/preview/enable', disable: '/preview/disable'},
         }
       : undefined,
+  },
+
+  i18n: {
+    // English at /, Dutch at /nl with translated route segments
+    strategy: 'prefix_except_default',
+    defaultLocale: 'en',
+    locales: [
+      {code: 'en', language: 'en-GB', name: 'English', file: 'en.json'},
+      {code: 'nl', language: 'nl-NL', name: 'Nederlands', file: 'nl.json'},
+    ],
+    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    detectBrowserLanguage: false,
+    customRoutes: 'config',
+    pages: {
+      'news': {en: '/news', nl: '/nieuws'},
+      'news-slug': {en: '/news/[slug]', nl: '/nieuws/[slug]'},
+      'products': {en: '/products', nl: '/producten'},
+      'products-slug': {en: '/products/[slug]', nl: '/producten/[slug]'},
+    },
   },
 
   image: {

@@ -5,6 +5,8 @@ import type {SiteSettings} from '~/types/sanity'
 const props = defineProps<{settings?: SiteSettings | null}>()
 
 const editAttr = useEditAttr()
+const {t} = useI18n()
+const localePath = useLocalePath()
 const year = new Date().getFullYear()
 const settingsDoc = computed(() => (props.settings ? {_id: props.settings._id, _type: 'siteSettings'} : null))
 const platformLabels: Record<string, string> = {
@@ -23,7 +25,7 @@ const platformLabels: Record<string, string> = {
     <div class="container-page relative py-16 lg:py-20">
       <div class="grid gap-12 lg:grid-cols-12">
         <div class="lg:col-span-4">
-          <NuxtLink to="/" class="inline-block rounded-lg">
+          <NuxtLink :to="localePath('/')" class="inline-block rounded-lg">
             <LayoutSiteLogo :name="settings?.siteName" dark />
           </NuxtLink>
           <p v-if="settings?.tagline" class="mt-5 font-display text-lg text-white">{{ settings.tagline }}</p>
@@ -43,7 +45,7 @@ const platformLabels: Record<string, string> = {
         </div>
 
         <nav
-          aria-label="Footer"
+          :aria-label="t('a11y.footerNav')"
           class="grid gap-10 sm:grid-cols-3 lg:col-span-7 lg:col-start-6"
           :data-sanity="editAttr(settingsDoc, 'footerNavigation')"
         >
@@ -70,7 +72,7 @@ const platformLabels: Record<string, string> = {
             >
               {{ platformLabels[clean(social.platform)] ?? social.platform }}
               <ArrowUpRight class="size-3.5" aria-hidden="true" />
-              <span class="sr-only">(opens in a new tab)</span>
+              <span class="sr-only">{{ t('a11y.newTab') }}</span>
             </a>
           </li>
         </ul>

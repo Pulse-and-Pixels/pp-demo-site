@@ -1,0 +1,86 @@
+{
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "newTab": "(opens in a new tab)",
+    "mainNav": "Main",
+    "mobileNav": "Mobile",
+    "footerNav": "Footer",
+    "home": "{site} – home",
+    "language": "Language",
+    "rating": "Rated {rating} out of 5"
+  },
+  "common": {
+    "featured": "Featured",
+    "all": "All",
+    "filterByCategory": "Filter by category"
+  },
+  "language": {
+    "switchTo": "Switch to {language}",
+    "unavailable": "This page is not available in {language}; you'll go to the {language} homepage."
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page {page}"
+  },
+  "news": {
+    "fallbackTitle": "News",
+    "featuredArticle": "Featured article",
+    "allArticles": "All articles",
+    "articlesIn": "Articles in {category}",
+    "noneTitle": "No articles found",
+    "noneText": "There are no articles in this category yet.",
+    "viewAll": "View all articles →",
+    "back": "All news",
+    "writtenBy": "Written by",
+    "aboutAuthor": "About the author",
+    "keepReading": "Keep reading",
+    "emptyBlockTitle": "No articles yet",
+    "emptyBlockText": "Published articles will appear here automatically."
+  },
+  "products": {
+    "fallbackTitle": "Products",
+    "search": "Search products",
+    "clearSearch": "Clear search",
+    "allProducts": "All products",
+    "count": "no products | {count} product | {count} products",
+    "countMatching": "no products matching “{term}” | {count} product matching “{term}” | {count} products matching “{term}”",
+    "noneTitle": "No products found",
+    "noneText": "Try another search term or category.",
+    "clearFilters": "Clear filters →",
+    "breadcrumb": "Breadcrumb",
+    "images": "Product images",
+    "showImage": "Show image {index} of {total}",
+    "specifications": "Specifications",
+    "about": "About the {name}",
+    "related": "You might also like",
+    "emptyBlockTitle": "No products to show yet",
+    "emptyBlockText": "Products added in the Studio will appear here automatically."
+  },
+  "testimonials": {
+    "previous": "Previous testimonial",
+    "next": "Next testimonial",
+    "show": "Show testimonial {index} of {total}"
+  },
+  "page": {
+    "emptyText": "This page doesn't have any sections yet. Add some in the Studio."
+  },
+  "error": {
+    "notFoundTitle": "We couldn’t find that page",
+    "notFoundText": "The page may have moved, or the link might be out of date.",
+    "genericTitle": "Something went wrong",
+    "genericText": "Please try again in a moment.",
+    "home": "Back to home",
+    "news": "Read the news",
+    "pageNotFound": "Page not found",
+    "loadFailed": "Content could not be loaded"
+  },
+  "preview": {
+    "active": "Preview mode: showing drafts",
+    "exit": "Exit preview",
+    "unknownBlock": "Unknown section type"
+  }
+}

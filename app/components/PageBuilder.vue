@@ -24,6 +24,7 @@ const blockComponents: Record<BlockType, Component> = {
 
 const editAttr = useEditAttr()
 const preview = useIsPreview()
+const {t} = useI18n()
 
 const sections = computed(() =>
   (props.blocks ?? []).map((block) => {
@@ -54,7 +55,7 @@ if (import.meta.dev) {
       <!-- Unknown block types are skipped for visitors and flagged for editors -->
       <div v-else-if="preview" class="container-page py-8" :data-sanity="editAttr(doc, section.path)">
         <p class="rounded-card border border-dashed border-amber-400 bg-amber-50 p-6 text-amber-900">
-          Unknown section type <code>{{ section.type }}</code>. Add a component for it in <code>PageBuilder.vue</code>.
+          {{ t('preview.unknownBlock') }} <code>{{ section.type }}</code>. Add a component for it in <code>PageBuilder.vue</code>.
         </p>
       </div>
     </template>

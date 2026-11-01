@@ -11,6 +11,8 @@ interface ProductsOverview {
 
 const route = useRoute()
 const router = useRouter()
+const {t} = useI18n()
+const localePath = useLocalePath()
 
 const category = computed(() => (typeof route.query.category === 'string' ? route.query.category : ''))
 const searchTerm = computed(() => (typeof route.query.q === 'string' ? route.query.q.trim() : ''))
@@ -32,7 +34,7 @@ syncParams()
 watch(() => route.query, syncParams)
 
 const {data, error, status} = await useContent<ProductsOverview>(productsOverviewQuery, params)
-if (error.value) throw createError({statusCode: 500, statusMessage: 'Products could not be loaded', fatal: true})
+if (error.value) throw createError({statusCode: 500, statusMessage: t('error.loadFailed'), fatal: true})
 
 // Search input updates the URL (debounced) so results are shareable
 const input = ref(searchTerm.value)
@@ -50,7 +52,7 @@ onBeforeUnmount(() => clearTimeout(timer))
 
 const activeCategory = computed(() => data.value?.categories.find((c) => clean(c.slug) === category.value))
 const filters = computed(() => [
-  {key: 'all', title: 'All products', to: {query: {q: route.query.q}}, active: !category.value},
+  {key: 'all', title: t('products.allProducts'), to: {query: {q: route.query.q}}, active: !category.value},
   ...(data.value?.categories ?? []).map((c) => ({
     key: c._id,
     title: c.title,
@@ -61,13 +63,12 @@ const filters = computed(() => [
 
 const resultLabel = computed(() => {
   const count = data.value?.items.length ?? 0
-  const noun = count === 1 ? 'product' : 'products'
-  return searchTerm.value ? `${count} ${noun} matching “${searchTerm.value}”` : `${count} ${noun}`
+  return searchTerm.value ? t('products.countMatching', {count, term: searchTerm.value}, count) : t('products.count', {count}, count)
 })
 
 usePageSeo(() => {
   const settings = data.value?.settings
-  const base = clean(settings?.title) ?? 'Products'
+  const base = clean(settings?.title) ?? t('products.fallbackTitle')
   return activeCategory.value
     ? {title: `${clean(activeCategory.value.title)} – ${base}`, description: settings?.intro, seo: {...settings?.seo, metaTitle: undefined}}
     : {title: base, description: settings?.intro, seo: settings?.seo}
@@ -76,11 +77,11 @@ usePageSeo(() => {
 
 <template>
   <div>
-    <UiPageIntro :title="data?.settings?.title ?? 'Products'" :intro="data?.settings?.intro">
+    <UiPageIntro :title="data?.settings?.title ?? t('products.fallbackTitle')" :intro="data?.settings?.intro">
       <div class="mt-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <UiFilterPills v-if="data?.categories?.length" label="Filter by category" :items="filters" />
-        <form role="search" class="relative w-full lg:max-w-xs" action="/products" @submit.prevent>
-          <label for="product-search" class="sr-only">Search products</label>
+        <UiFilterPills v-if="data?.categories?.length" :label="t('common.filterByCategory')" :items="filters" />
+        <form role="search" class="relative w-full lg:max-w-xs" :action="localePath('products')" @submit.prevent>
+          <label for="product-search" class="sr-only">{{ t('products.search') }}</label>
           <Search class="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-ink-400" aria-hidden="true" />
           <input
             id="product-search"
@@ -88,7 +89,7 @@ usePageSeo(() => {
             name="q"
             type="search"
             autocomplete="off"
-            placeholder="Search products"
+            :placeholder="t('products.search')"
             class="w-full rounded-full border-0 bg-white py-2.5 pr-10 pl-10 text-sm text-ink-900 ring-1 ring-ink-200 transition placeholder:text-ink-400 focus:ring-2 focus:ring-brand-500 focus:outline-none [&::-webkit-search-cancel-button]:hidden"
           />
           <input v-if="category" type="hidden" name="category" :value="category" />
@@ -98,7 +99,7 @@ usePageSeo(() => {
             class="absolute top-1/2 right-2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-full text-ink-500 hover:bg-ink-100"
             @click="input = ''"
           >
-            <X class="size-4" aria-hidden="true" /><span class="sr-only">Clear search</span>
+            <X class="size-4" aria-hidden="true" /><span class="sr-only">{{ t('products.clearSearch') }}</span>
           </button>
         </form>
       </div>
@@ -116,8 +117,8 @@ usePageSeo(() => {
           <CardsProductCard :product="product" />
         </li>
       </ul>
-      <UiEmptyState v-else class="mt-6" title="No products found" text="Try another search term or category.">
-        <NuxtLink to="/products" class="font-semibold text-brand-600 hover:text-brand-700">Clear filters →</NuxtLink>
+      <UiEmptyState v-else class="mt-6" :title="t('products.noneTitle')" :text="t('products.noneText')">
+        <NuxtLink :to="localePath('products')" class="font-semibold text-brand-600 hover:text-brand-700">{{ t('products.clearFilters') }}</NuxtLink>
       </UiEmptyState>
     </section>
   </div>

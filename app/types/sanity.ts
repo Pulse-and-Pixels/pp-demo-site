@@ -18,7 +18,14 @@ export type RichText = (PortableTextBlock | (SanityImage & {_type: 'image'; _key
 
 export interface InternalTarget {
   _type: 'page' | 'newsArticle' | 'product'
+  language?: string
   slug?: string
+}
+
+/** A language version of a document, from its translation.metadata document. */
+export interface Translation {
+  language: string
+  slug?: string | null
 }
 
 export interface Link {
@@ -62,6 +69,7 @@ export interface Author {
 export interface NewsCard {
   _id: string
   _type: 'newsArticle'
+  language?: string
   title: string
   slug: string
   excerpt?: string
@@ -73,6 +81,7 @@ export interface NewsCard {
 }
 
 export interface NewsArticle extends NewsCard {
+  translations?: Translation[] | null
   body?: RichText
   author?: Author | null
   seo?: Seo
@@ -81,6 +90,7 @@ export interface NewsArticle extends NewsCard {
 export interface ProductCard {
   _id: string
   _type: 'product'
+  language?: string
   name: string
   slug: string
   tagline?: string
@@ -94,6 +104,7 @@ export interface ProductCard {
 }
 
 export interface Product extends Omit<ProductCard, 'image'> {
+  translations?: Translation[] | null
   description?: RichText
   images?: (SanityImage & {_key: string})[]
   specifications?: {_key: string; label: string; value: string}[]
@@ -245,6 +256,8 @@ export type BlockType = PageBuilderBlock['_type']
 export interface Page {
   _id: string
   _type: 'page'
+  language?: string
+  translations?: Translation[] | null
   title: string
   slug: string
   seo?: Seo

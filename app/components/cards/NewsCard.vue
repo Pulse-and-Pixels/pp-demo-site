@@ -7,8 +7,9 @@ const props = withDefaults(
 )
 
 const editAttr = useEditAttr()
-const href = computed(() => documentHref('newsArticle', props.article.slug))
-const date = computed(() => formatDate(props.article.publishedAt))
+const {locale} = useI18n()
+const href = computed(() => documentHref('newsArticle', props.article.slug, props.article.language ?? locale.value))
+const date = computed(() => formatDate(props.article.publishedAt, locale.value))
 </script>
 
 <template>

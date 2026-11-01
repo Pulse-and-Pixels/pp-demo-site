@@ -1,15 +1,19 @@
 import {stegaClean} from '@sanity/client/stega'
 
-const dateFormatter = new Intl.DateTimeFormat('en-GB', {day: 'numeric', month: 'long', year: 'numeric'})
+/** BCP 47 locale per site language, used for dates and prices. */
+const intlLocales: Record<string, string> = {en: 'en-GB', nl: 'nl-NL'}
+const intlLocale = (language?: string) => intlLocales[language ?? 'en'] ?? 'en-GB'
 
-export function formatDate(value?: string | null) {
+export function formatDate(value?: string | null, language?: string) {
   const clean = stegaClean(value)
-  return clean ? dateFormatter.format(new Date(clean)) : ''
+  return clean
+    ? new Intl.DateTimeFormat(intlLocale(language), {day: 'numeric', month: 'long', year: 'numeric'}).format(new Date(clean))
+    : ''
 }
 
-export function formatPrice(amount?: number | null, currency?: string | null) {
+export function formatPrice(amount?: number | null, currency?: string | null, language?: string) {
   if (typeof amount !== 'number') return ''
-  return new Intl.NumberFormat('en-GB', {
+  return new Intl.NumberFormat(intlLocale(language), {
     style: 'currency',
     currency: stegaClean(currency) || 'EUR',
     maximumFractionDigits: Number.isInteger(amount) ? 0 : 2,

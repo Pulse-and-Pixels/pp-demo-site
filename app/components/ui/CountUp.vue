@@ -9,9 +9,10 @@ const props = withDefaults(
 )
 
 const el = ref<HTMLElement>()
+const {locale} = useI18n()
 const current = ref(props.value)
 const format = (n: number) =>
-  n.toLocaleString('en-GB', {minimumFractionDigits: props.decimals, maximumFractionDigits: props.decimals})
+  n.toLocaleString(locale.value === 'nl' ? 'nl-NL' : 'en-GB', {minimumFractionDigits: props.decimals, maximumFractionDigits: props.decimals})
 
 let observer: IntersectionObserver | undefined
 

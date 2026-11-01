@@ -5,12 +5,15 @@ import type {Product, ProductCard} from '~/types/sanity'
 
 type ProductWithRelated = Product & {related: ProductCard[]; others: ProductCard[]}
 
-const route = useRoute('products-slug')
-const {data: product, error} = await useContent<ProductWithRelated>(productQuery, {slug: route.params.slug})
+const route = useRoute()
+const {t, locale} = useI18n()
+const localePath = useLocalePath()
+const {data: product, error} = await useContent<ProductWithRelated>(productQuery, {slug: String(route.params.slug)})
 assertContent(product.value, error.value, 'Product')
 
 const {data: settings} = useSiteSettings()
 const editAttr = useEditAttr()
+useDocumentTranslations(() => product.value?.translations)
 
 const images = computed(() => product.value?.images?.filter((image) => image.asset) ?? [])
 const activeIndex = ref(0)
@@ -61,13 +64,13 @@ useHead({
 
 <template>
   <div v-if="product">
-    <nav aria-label="Breadcrumb" class="border-b border-ink-100">
+    <nav :aria-label="t('products.breadcrumb')" class="border-b border-ink-100">
       <ol class="container-page flex items-center gap-2 py-4 text-sm text-ink-500">
-        <li><NuxtLink to="/products" class="hover:text-brand-600">Products</NuxtLink></li>
+        <li><NuxtLink :to="localePath('products')" class="hover:text-brand-600">{{ t('products.fallbackTitle') }}</NuxtLink></li>
         <template v-if="product.categories?.[0]">
           <li aria-hidden="true"><ChevronRight class="size-4" /></li>
           <li>
-            <NuxtLink :to="{path: '/products', query: {category: clean(product.categories[0].slug)}}" class="hover:text-brand-600">
+            <NuxtLink :to="localePath({name: 'products', query: {category: clean(product.categories[0].slug)}})" class="hover:text-brand-600">
               {{ product.categories[0].title }}
             </NuxtLink>
           </li>
@@ -97,16 +100,16 @@ useHead({
             v-if="product.badge || product.featured"
             class="absolute top-5 left-5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink-900 shadow-sm backdrop-blur"
           >
-            {{ product.badge || 'Featured' }}
+            {{ product.badge || t('common.featured') }}
           </span>
         </div>
-        <ul v-if="images.length > 1" class="mt-4 grid grid-cols-4 gap-3" aria-label="Product images">
+        <ul v-if="images.length > 1" class="mt-4 grid grid-cols-4 gap-3" :aria-label="t('products.images')">
           <li v-for="(image, index) in images" :key="image._key">
             <button
               type="button"
               class="block w-full overflow-hidden rounded-xl ring-2 transition"
               :class="index === activeIndex ? 'ring-brand-500' : 'ring-transparent opacity-70 hover:opacity-100'"
-              :aria-label="`Show image ${index + 1} of ${images.length}`"
+              :aria-label="t('products.showImage', {index: index + 1, total: images.length})"
               :aria-pressed="index === activeIndex"
               @click="activeIndex = index"
             >
@@ -123,14 +126,14 @@ useHead({
         </p>
         <h1 class="mt-3 text-4xl font-extrabold text-balance sm:text-5xl">{{ product.name }}</h1>
         <p v-if="product.tagline" class="mt-3 font-display text-xl text-ink-500">{{ product.tagline }}</p>
-        <p class="mt-8 font-display text-3xl font-bold text-ink-950">{{ formatPrice(product.price, product.currency) }}</p>
+        <p class="mt-8 font-display text-3xl font-bold text-ink-950">{{ formatPrice(product.price, product.currency, locale) }}</p>
         <p v-if="product.shortDescription" class="mt-6 text-lg leading-relaxed text-ink-600">{{ product.shortDescription }}</p>
         <div v-if="cta?.link" class="mt-8">
           <UiCtaButton :cta="cta" size="lg" />
         </div>
 
         <div v-if="product.specifications?.length" class="mt-12">
-          <h2 class="text-xl font-bold">Specifications</h2>
+          <h2 class="text-xl font-bold">{{ t('products.specifications') }}</h2>
           <dl class="mt-4 divide-y divide-ink-100 border-y border-ink-100">
             <div v-for="spec in product.specifications" :key="spec._key" class="grid grid-cols-5 gap-4 py-3.5 text-sm">
               <dt class="col-span-2 font-medium text-ink-500">{{ spec.label }}</dt>
@@ -140,7 +143,7 @@ useHead({
         </div>
 
         <div v-if="product.description?.length" class="mt-12">
-          <h2 class="text-xl font-bold">About the {{ product.name }}</h2>
+          <h2 class="text-xl font-bold">{{ t('products.about', {name: product.name}) }}</h2>
           <UiRichText :value="product.description" class="mt-4 prose-base" />
         </div>
       </div>
@@ -148,7 +151,7 @@ useHead({
 
     <section v-if="related.length" class="bg-ink-50 section-y" aria-labelledby="related-heading">
       <div class="container-page">
-        <h2 id="related-heading" class="text-3xl font-bold sm:text-4xl">You might also like</h2>
+        <h2 id="related-heading" class="text-3xl font-bold sm:text-4xl">{{ t('products.related') }}</h2>
         <ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <li v-for="item in related" :key="item._id"><CardsProductCard :product="item" /></li>
         </ul>

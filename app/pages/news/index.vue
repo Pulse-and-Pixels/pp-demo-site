@@ -11,6 +11,8 @@ interface NewsOverview {
 }
 
 const route = useRoute()
+const {t} = useI18n()
+const localePath = useLocalePath()
 
 const currentPage = computed(() => Math.max(1, Number.parseInt(String(route.query.page ?? '1'), 10) || 1))
 const category = computed(() => (typeof route.query.category === 'string' ? route.query.category : ''))
@@ -25,14 +27,14 @@ syncParams()
 watch(() => route.query, syncParams)
 
 const {data, error, status} = await useContent<NewsOverview>(newsOverviewQuery, params)
-if (error.value) throw createError({statusCode: 500, statusMessage: 'News could not be loaded', fatal: true})
+if (error.value) throw createError({statusCode: 500, statusMessage: t('error.loadFailed'), fatal: true})
 
 const pages = computed(() => Math.max(1, Math.ceil((data.value?.total ?? 0) / NEWS_PAGE_SIZE)))
 const showFeatured = computed(() => currentPage.value === 1 && !category.value && data.value?.featured)
 const activeCategory = computed(() => data.value?.categories.find((c) => clean(c.slug) === category.value))
 
 const filters = computed(() => [
-  {key: 'all', title: 'All', to: {query: {}}, active: !category.value},
+  {key: 'all', title: t('common.all'), to: {query: {}}, active: !category.value},
   ...(data.value?.categories ?? []).map((c) => ({
     key: c._id,
     title: c.title,
@@ -43,11 +45,11 @@ const filters = computed(() => [
 
 usePageSeo(() => {
   const settings = data.value?.settings
-  const base = clean(settings?.title) ?? 'News'
+  const base = clean(settings?.title) ?? t('news.fallbackTitle')
   const variant = Boolean(activeCategory.value) || currentPage.value > 1
   const title = [
     activeCategory.value ? `${clean(activeCategory.value.title)} – ${base}` : base,
-    currentPage.value > 1 ? `Page ${currentPage.value}` : '',
+    currentPage.value > 1 ? t('pagination.page', {page: currentPage.value}) : '',
   ]
     .filter(Boolean)
     .join(' · ')
@@ -58,19 +60,19 @@ usePageSeo(() => {
 
 <template>
   <div>
-    <UiPageIntro :title="data?.settings?.title ?? 'News'" :intro="data?.settings?.intro">
-      <UiFilterPills v-if="data?.categories?.length" label="Filter by category" :items="filters" class="mt-10" />
+    <UiPageIntro :title="data?.settings?.title ?? t('news.fallbackTitle')" :intro="data?.settings?.intro">
+      <UiFilterPills v-if="data?.categories?.length" :label="t('common.filterByCategory')" :items="filters" class="mt-10" />
     </UiPageIntro>
 
     <div class="container-page py-14 lg:py-20">
       <div v-if="showFeatured && data?.featured" class="mb-12">
-        <h2 class="sr-only">Featured article</h2>
+        <h2 class="sr-only">{{ t('news.featuredArticle') }}</h2>
         <CardsNewsCard :article="data.featured" variant="large" heading-level="h3" priority />
       </div>
 
       <section id="articles" aria-labelledby="articles-heading" class="scroll-mt-28">
         <h2 id="articles-heading" class="sr-only">
-          {{ activeCategory ? `Articles in ${activeCategory.title}` : 'All articles' }}
+          {{ activeCategory ? t('news.articlesIn', {category: activeCategory.title}) : t('news.allArticles') }}
         </h2>
         <ul
           v-if="data?.items?.length"
@@ -82,8 +84,8 @@ usePageSeo(() => {
             <CardsNewsCard :article="article" />
           </li>
         </ul>
-        <UiEmptyState v-else title="No articles found" text="There are no articles in this category yet.">
-          <NuxtLink to="/news" class="font-semibold text-brand-600 hover:text-brand-700">View all articles →</NuxtLink>
+        <UiEmptyState v-else :title="t('news.noneTitle')" :text="t('news.noneText')">
+          <NuxtLink :to="localePath('news')" class="font-semibold text-brand-600 hover:text-brand-700">{{ t('news.viewAll') }}</NuxtLink>
         </UiEmptyState>
       </section>
 

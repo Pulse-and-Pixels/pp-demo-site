@@ -9,6 +9,8 @@ const {data: page, error} = await useContent<Page>(pageBySlugQuery, {slug: props
 assertContent(page.value, error.value)
 
 usePageSeo(() => page.value && {title: page.value.title, seo: page.value.seo})
+useDocumentTranslations(() => page.value?.translations)
+const {t} = useI18n()
 
 // The first hero renders the page's <h1>; otherwise provide one for assistive tech
 const needsHeading = computed(() => clean(page.value?.pageBuilder?.[0]?._type) !== 'heroBlock')
@@ -19,7 +21,7 @@ const needsHeading = computed(() => clean(page.value?.pageBuilder?.[0]?._type) !
     <h1 v-if="needsHeading" class="sr-only">{{ page.title }}</h1>
     <PageBuilder :blocks="page.pageBuilder" :doc="page" />
     <div v-if="!page.pageBuilder?.length" class="container-page section-y">
-      <UiEmptyState :title="page.title" text="This page doesn't have any sections yet. Add some in the Studio." />
+      <UiEmptyState :title="page.title" :text="t('page.emptyText')" />
     </div>
   </div>
 </template>

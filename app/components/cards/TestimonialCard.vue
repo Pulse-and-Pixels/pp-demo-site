@@ -4,6 +4,7 @@ import type {Testimonial} from '~/types/sanity'
 withDefaults(defineProps<{testimonial: Testimonial; size?: 'md' | 'lg'; dark?: boolean}>(), {size: 'md'})
 
 const editAttr = useEditAttr()
+const {t} = useI18n()
 </script>
 
 <template>
@@ -14,7 +15,7 @@ const editAttr = useEditAttr()
       size === 'lg' && 'items-center p-0 text-center shadow-none ring-0 bg-transparent',
     ]"
   >
-    <div v-if="testimonial.rating" class="flex gap-0.5 text-amber-400" :aria-label="`Rated ${clean(testimonial.rating)} out of 5`">
+    <div v-if="testimonial.rating" class="flex gap-0.5 text-amber-400" :aria-label="t('a11y.rating', {rating: clean(testimonial.rating) ?? 0})">
       <svg v-for="i in clean(testimonial.rating)" :key="i" class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z" />
       </svg>

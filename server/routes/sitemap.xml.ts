@@ -1,16 +1,13 @@
+import {documentHref} from '../../app/utils/links'
 import {sitemapQuery} from '../../app/queries/sitemap'
 
-interface SitemapEntry {
-  slug: string
-  _updatedAt: string
-}
-
 interface SitemapData {
-  pages: SitemapEntry[]
-  news: SitemapEntry[]
-  products: SitemapEntry[]
+  documents: {_type: string; language: string; slug: string; _updatedAt: string}[]
   siteUrl?: string
 }
+
+const languages = ['en', 'nl'] as const
+const listings = {en: ['/news', '/products'], nl: ['/nl/nieuws', '/nl/producten']}
 
 const escapeXml = (value: string) =>
   value.replace(/[<>&'"]/g, (c) => ({'<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'})[c]!)
@@ -24,18 +21,12 @@ export default defineEventHandler(async (event) => {
 
   const base = (data.siteUrl || config.public.siteUrl).replace(/\/$/, '')
   const entries = [
-    ...data.pages.map((p) => ({loc: p.slug === 'home' ? '/' : `/${p.slug}`, lastmod: p._updatedAt})),
-    {loc: '/news'},
-    ...data.news.map((p) => ({loc: `/news/${p.slug}`, lastmod: p._updatedAt})),
-    {loc: '/products'},
-    ...data.products.map((p) => ({loc: `/products/${p.slug}`, lastmod: p._updatedAt})),
+    ...data.documents.map((doc) => ({loc: documentHref(doc._type, doc.slug, doc.language), lastmod: doc._updatedAt})),
+    ...languages.flatMap((lang) => listings[lang].map((loc) => ({loc, lastmod: undefined}))),
   ]
 
   const urls = entries
-    .map(
-      ({loc, lastmod}: {loc: string; lastmod?: string}) =>
-        `  <url><loc>${escapeXml(base + loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`,
-    )
+    .map(({loc, lastmod}) => `  <url><loc>${escapeXml(base + loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}</url>`)
     .join('\n')
 
   setResponseHeaders(event, {

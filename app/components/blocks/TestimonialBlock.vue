@@ -5,6 +5,7 @@ const props = defineProps<{block: TestimonialBlock; doc?: DocumentRef; path?: Pa
 
 const testimonials = computed(() => props.block.testimonials?.filter(Boolean) ?? [])
 const spotlight = computed(() => clean(props.block.layout) === 'spotlight')
+const {t} = useI18n()
 const active = ref(0)
 const current = computed(() => testimonials.value[active.value] ?? testimonials.value[0])
 const go = (step: number) => {
@@ -34,19 +35,19 @@ const go = (step: number) => {
           type="button"
           class="inline-flex size-11 items-center justify-center rounded-full ring-1 transition hover:-translate-x-0.5"
           :class="dark ? 'text-white ring-white/20 hover:bg-white/10' : 'text-ink-900 ring-ink-200 hover:bg-ink-50'"
-          aria-label="Previous testimonial"
+          :aria-label="t('testimonials.previous')"
           @click="go(-1)"
         >
           ←
         </button>
         <div class="flex gap-2">
           <button
-            v-for="(t, i) in testimonials"
-            :key="t._id"
+            v-for="(item, i) in testimonials"
+            :key="item._id"
             type="button"
             class="h-2 rounded-full transition-all"
             :class="[i === active ? 'w-8 bg-brand-500' : 'w-2', i !== active && (dark ? 'bg-white/25' : 'bg-ink-200')]"
-            :aria-label="`Show testimonial ${i + 1} of ${testimonials.length}`"
+            :aria-label="t('testimonials.show', {index: i + 1, total: testimonials.length})"
             :aria-current="i === active ? 'true' : undefined"
             @click="active = i"
           />
@@ -55,7 +56,7 @@ const go = (step: number) => {
           type="button"
           class="inline-flex size-11 items-center justify-center rounded-full ring-1 transition hover:translate-x-0.5"
           :class="dark ? 'text-white ring-white/20 hover:bg-white/10' : 'text-ink-900 ring-ink-200 hover:bg-ink-50'"
-          aria-label="Next testimonial"
+          :aria-label="t('testimonials.next')"
           @click="go(1)"
         >
           →

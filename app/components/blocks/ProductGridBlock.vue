@@ -7,6 +7,7 @@ const items = computed(() => {
   const all = props.block.items?.filter(Boolean) ?? []
   return clean(props.block.mode) === 'manual' ? all : all.slice(0, clean(props.block.limit) ?? 3)
 })
+const {t} = useI18n()
 const compact = computed(() => clean(props.block.layout) === 'compact')
 const columns = computed(() =>
   compact.value
@@ -26,6 +27,6 @@ const columns = computed(() =>
         <CardsProductCard :product="product" :compact="compact" />
       </li>
     </ul>
-    <UiEmptyState v-else class="mt-12" title="No products to show yet" text="Products added in the Studio will appear here automatically." />
+    <UiEmptyState v-else class="mt-12" :title="t('products.emptyBlockTitle')" :text="t('products.emptyBlockText')" />
   </UiSection>
 </template>

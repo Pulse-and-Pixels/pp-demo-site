@@ -20,6 +20,7 @@
   "dependencies": {
     "@lucide/vue": "^1.63.0",
     "@nuxt/image": "^2.2.0",
+    "@nuxtjs/i18n": "^10.6.0",
     "@nuxtjs/sanity": "^2.5.0",
     "@portabletext/types": "^4.0.2",
     "@portabletext/vue": "^2.0.0",

@@ -1,0 +1,86 @@
+{
+  "a11y": {
+    "skipToContent": "Direct naar de inhoud",
+    "openMenu": "Menu openen",
+    "closeMenu": "Menu sluiten",
+    "newTab": "(opent in een nieuw tabblad)",
+    "mainNav": "Hoofdmenu",
+    "mobileNav": "Mobiel menu",
+    "footerNav": "Footer",
+    "home": "{site} – home",
+    "language": "Taal",
+    "rating": "Beoordeeld met {rating} van de 5"
+  },
+  "common": {
+    "featured": "Uitgelicht",
+    "all": "Alles",
+    "filterByCategory": "Filter op categorie"
+  },
+  "language": {
+    "switchTo": "Bekijk in het {language}",
+    "unavailable": "Deze pagina bestaat niet in het {language}; je gaat naar de {language} homepage."
+  },
+  "pagination": {
+    "label": "Paginering",
+    "previous": "Vorige pagina",
+    "next": "Volgende pagina",
+    "page": "Pagina {page}"
+  },
+  "news": {
+    "fallbackTitle": "Nieuws",
+    "featuredArticle": "Uitgelicht artikel",
+    "allArticles": "Alle artikelen",
+    "articlesIn": "Artikelen in {category}",
+    "noneTitle": "Geen artikelen gevonden",
+    "noneText": "Er zijn nog geen artikelen in deze categorie.",
+    "viewAll": "Bekijk alle artikelen →",
+    "back": "Alle nieuws",
+    "writtenBy": "Geschreven door",
+    "aboutAuthor": "Over de auteur",
+    "keepReading": "Lees verder",
+    "emptyBlockTitle": "Nog geen artikelen",
+    "emptyBlockText": "Gepubliceerde artikelen verschijnen hier automatisch."
+  },
+  "products": {
+    "fallbackTitle": "Producten",
+    "search": "Zoek producten",
+    "clearSearch": "Zoekopdracht wissen",
+    "allProducts": "Alle producten",
+    "count": "geen producten | {count} product | {count} producten",
+    "countMatching": "geen producten voor “{term}” | {count} product voor “{term}” | {count} producten voor “{term}”",
+    "noneTitle": "Geen producten gevonden",
+    "noneText": "Probeer een andere zoekterm of categorie.",
+    "clearFilters": "Filters wissen →",
+    "breadcrumb": "Kruimelpad",
+    "images": "Productafbeeldingen",
+    "showImage": "Toon afbeelding {index} van {total}",
+    "specifications": "Specificaties",
+    "about": "Over de {name}",
+    "related": "Misschien ook interessant",
+    "emptyBlockTitle": "Nog geen producten",
+    "emptyBlockText": "Producten die je in de Studio toevoegt, verschijnen hier automatisch."
+  },
+  "testimonials": {
+    "previous": "Vorige review",
+    "next": "Volgende review",
+    "show": "Toon review {index} van {total}"
+  },
+  "page": {
+    "emptyText": "Deze pagina heeft nog geen secties. Voeg ze toe in de Studio."
+  },
+  "error": {
+    "notFoundTitle": "We kunnen deze pagina niet vinden",
+    "notFoundText": "De pagina is misschien verplaatst, of de link is verouderd.",
+    "genericTitle": "Er ging iets mis",
+    "genericText": "Probeer het over een moment opnieuw.",
+    "home": "Terug naar home",
+    "news": "Lees het nieuws",
+    "pageNotFound": "Pagina niet gevonden",
+    "loadFailed": "De inhoud kon niet worden geladen"
+  },
+  "preview": {
+    "active": "Previewmodus: je ziet concepten",
+    "exit": "Preview sluiten",
+    "unknownBlock": "Onbekend sectietype"
+  }
+}

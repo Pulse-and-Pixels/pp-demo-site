@@ -5,13 +5,15 @@ import type {SiteSettings} from '~/types/sanity'
 const props = defineProps<{settings?: SiteSettings | null}>()
 
 const route = useRoute()
+const {t} = useI18n()
+const localePath = useLocalePath()
 const editAttr = useEditAttr()
 const open = ref(false)
 const scrolled = ref(false)
 const settingsDoc = computed(() => (props.settings ? {_id: props.settings._id, _type: 'siteSettings'} : null))
 
 const isActive = (href?: string) => {
-  if (!href || href === '/') return route.path === href
+  if (!href || href === '/' || href === localePath('/')) return route.path === href
   return route.path === href || route.path.startsWith(`${href.split('?')[0]}/`)
 }
 
@@ -36,11 +38,11 @@ const onKeydown = (event: KeyboardEvent) => {
     @keydown="onKeydown"
   >
     <div class="container-page flex h-18 items-center justify-between gap-6">
-      <NuxtLink to="/" class="rounded-lg" :aria-label="`${clean(settings?.siteName) ?? 'Home'} – home`">
+      <NuxtLink :to="localePath('/')" class="rounded-lg" :aria-label="t('a11y.home', {site: clean(settings?.siteName) ?? 'Northstar'})">
         <LayoutSiteLogo :name="settings?.siteName" />
       </NuxtLink>
 
-      <nav aria-label="Main" class="hidden lg:block" :data-sanity="editAttr(settingsDoc, 'mainNavigation')">
+      <nav :aria-label="t('a11y.mainNav')" class="hidden lg:block" :data-sanity="editAttr(settingsDoc, 'mainNavigation')">
         <ul class="flex items-center gap-1">
           <li v-for="item in settings?.mainNavigation" :key="item._key">
             <UiSmartLink
@@ -54,6 +56,7 @@ const onKeydown = (event: KeyboardEvent) => {
       </nav>
 
       <div class="flex items-center gap-3">
+        <LayoutLanguageSwitcher class="hidden sm:block" />
         <div v-if="settings?.headerCta?.link" class="hidden sm:block">
           <UiCtaButton :cta="settings.headerCta" />
         </div>
@@ -64,7 +67,7 @@ const onKeydown = (event: KeyboardEvent) => {
           aria-controls="mobile-menu"
           @click="open = !open"
         >
-          <span class="sr-only">{{ open ? 'Close menu' : 'Open menu' }}</span>
+          <span class="sr-only">{{ open ? t('a11y.closeMenu') : t('a11y.openMenu') }}</span>
           <X v-if="open" class="size-5" aria-hidden="true" />
           <Menu v-else class="size-5" aria-hidden="true" />
         </button>
@@ -77,7 +80,7 @@ const onKeydown = (event: KeyboardEvent) => {
       leave-active-class="transition duration-150"
       leave-to-class="opacity-0"
     >
-      <nav v-show="open" id="mobile-menu" aria-label="Mobile" class="border-t border-ink-100 bg-white lg:hidden">
+      <nav v-show="open" id="mobile-menu" :aria-label="t('a11y.mobileNav')" class="border-t border-ink-100 bg-white lg:hidden">
         <ul class="container-page flex flex-col gap-1 py-4">
           <li v-for="item in settings?.mainNavigation" :key="item._key">
             <UiSmartLink
@@ -87,6 +90,7 @@ const onKeydown = (event: KeyboardEvent) => {
               :aria-current="isActive(resolveHref(item)) ? 'page' : undefined"
             />
           </li>
+          <li class="mt-2 px-4 sm:hidden"><LayoutLanguageSwitcher block /></li>
           <li v-if="settings?.headerCta?.link" class="mt-2 px-4 sm:hidden">
             <UiCtaButton :cta="settings.headerCta" class="w-full" />
           </li>

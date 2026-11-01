@@ -12,7 +12,7 @@ export const linkFields = /* groq */ `
   path,
   url,
   openInNewTab,
-  "internal": internal->{_type, "slug": slug.current}
+  "internal": internal->{_type, language, "slug": slug.current}
 `
 
 export const ctaFields = /* groq */ `{_key, variant, link{${linkFields}}}`
@@ -22,7 +22,7 @@ export const richTextFields = /* groq */ `{
   _type == "image" => {_type, _key, ${imageFields}},
   markDefs[]{
     ...,
-    _type == "link" => {..., "internal": internal->{_type, "slug": slug.current}}
+    _type == "link" => {..., "internal": internal->{_type, language, "slug": slug.current}}
   }
 }`
 
@@ -34,6 +34,7 @@ export const productCategoryFields = /* groq */ `{_id, "title": name, "slug": sl
 export const newsCardFields = /* groq */ `{
   _id,
   _type,
+  language,
   title,
   "slug": slug.current,
   excerpt,
@@ -47,6 +48,7 @@ export const newsCardFields = /* groq */ `{
 export const productCardFields = /* groq */ `{
   _id,
   _type,
+  language,
   name,
   "slug": slug.current,
   tagline,
@@ -61,8 +63,15 @@ export const productCardFields = /* groq */ `{
 
 export const testimonialFields = /* groq */ `{_id, quote, name, role, company, rating, avatar{${imageFields}}}`
 
-const publishedNews = /* groq */ `_type == "newsArticle" && defined(slug.current)`
-const publishedProducts = /* groq */ `_type == "product" && defined(slug.current)`
+/** Every query is scoped to the current language through the `$language` parameter. */
+const publishedNews = /* groq */ `_type == "newsArticle" && defined(slug.current) && language == $language`
+const publishedProducts = /* groq */ `_type == "product" && defined(slug.current) && language == $language`
+
+/** Slugs of all language versions of the current document, for the language switcher. */
+export const translationsField = /* groq */ `"translations": *[_type == "translation.metadata" && references(^._id)][0].translations[]{
+  language,
+  "slug": value->slug.current
+}`
 
 /** Items for collection blocks: manual selection, featured, by category or latest. Trimmed to `limit` in the component. */
 const productItems = /* groq */ `select(

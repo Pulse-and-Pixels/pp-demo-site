@@ -6,7 +6,8 @@ const props = withDefaults(defineProps<{product: ProductCard; compact?: boolean;
 })
 
 const editAttr = useEditAttr()
-const href = computed(() => documentHref('product', props.product.slug))
+const {t, locale} = useI18n()
+const href = computed(() => documentHref('product', props.product.slug, props.product.language ?? locale.value))
 </script>
 
 <template>
@@ -29,7 +30,7 @@ const href = computed(() => documentHref('product', props.product.slug))
         v-if="!compact && (product.badge || product.featured)"
         class="absolute top-3 left-3 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink-900 shadow-sm backdrop-blur"
       >
-        {{ product.badge || 'Featured' }}
+        {{ product.badge || t('common.featured') }}
       </span>
     </div>
     <div class="flex flex-1 flex-col" :class="compact ? 'py-1 pr-3' : 'p-5'">
@@ -45,7 +46,7 @@ const href = computed(() => documentHref('product', props.product.slug))
         {{ product.shortDescription }}
       </p>
       <p class="mt-auto pt-4 font-display text-base font-semibold text-ink-950">
-        {{ formatPrice(product.price, product.currency) }}
+        {{ formatPrice(product.price, product.currency, locale) }}
       </p>
     </div>
   </article>

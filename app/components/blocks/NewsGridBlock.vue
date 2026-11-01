@@ -7,6 +7,7 @@ const items = computed(() => {
   const all = props.block.items?.filter(Boolean) ?? []
   return clean(props.block.mode) === 'manual' ? all : all.slice(0, clean(props.block.limit) ?? 3)
 })
+const {t} = useI18n()
 const layout = computed(() => clean(props.block.layout) ?? 'grid')
 const [lead, rest] = [computed(() => items.value[0]), computed(() => items.value.slice(1))]
 </script>
@@ -18,7 +19,7 @@ const [lead, rest] = [computed(() => items.value[0]), computed(() => items.value
       <UiCtaButton v-if="block.cta?.link" :cta="block.cta" :tone="dark ? 'dark' : 'light'" class="shrink-0" />
     </div>
 
-    <UiEmptyState v-if="!items.length" class="mt-12" title="No articles yet" text="Published articles will appear here automatically." />
+    <UiEmptyState v-if="!items.length" class="mt-12" :title="t('news.emptyBlockTitle')" :text="t('news.emptyBlockText')" />
 
     <div v-else-if="layout === 'featured' && lead" class="mt-12 space-y-6">
       <CardsNewsCard :article="lead" variant="large" />

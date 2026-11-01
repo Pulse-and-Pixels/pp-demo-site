@@ -2,9 +2,11 @@
 import type {NuxtError} from '#app'
 
 const props = defineProps<{error: NuxtError}>()
+const {t} = useI18n()
+const localePath = useLocalePath()
 const notFound = computed(() => props.error.statusCode === 404)
 
-useHead({title: () => (notFound.value ? 'Page not found' : 'Something went wrong')})
+useHead({title: () => (notFound.value ? t('error.pageNotFound') : t('error.genericTitle'))})
 useSeoMeta({robots: 'noindex'})
 </script>
 
@@ -16,21 +18,25 @@ useSeoMeta({robots: 'noindex'})
           {{ error.statusCode }}
         </p>
         <h1 class="mt-6 text-3xl font-bold text-white sm:text-4xl">
-          {{ notFound ? 'We couldn’t find that page' : 'Something went wrong' }}
+          {{ notFound ? t('error.notFoundTitle') : t('error.genericTitle') }}
         </h1>
         <p class="mt-4 max-w-lg text-lg text-ink-300">
-          {{ notFound ? 'The page may have moved, or the link might be out of date.' : 'Please try again in a moment.' }}
+          {{ notFound ? t('error.notFoundText') : t('error.genericText') }}
         </p>
         <div class="mt-10 flex flex-wrap justify-center gap-4">
           <button
             type="button"
             class="rounded-full bg-white px-6 py-3 font-semibold text-ink-950 transition hover:-translate-y-0.5 hover:bg-brand-50"
-            @click="clearError({redirect: '/'})"
+            @click="clearError({redirect: localePath('/')})"
           >
-            Back to home
+            {{ t('error.home') }}
           </button>
-          <NuxtLink to="/news" class="rounded-full bg-white/10 px-6 py-3 font-semibold text-white ring-1 ring-white/25 transition hover:bg-white/15" @click="clearError()">
-            Read the news
+          <NuxtLink
+            :to="localePath('news')"
+            class="rounded-full bg-white/10 px-6 py-3 font-semibold text-white ring-1 ring-white/25 transition hover:bg-white/15"
+            @click="clearError()"
+          >
+            {{ t('error.news') }}
           </NuxtLink>
         </div>
       </div>
