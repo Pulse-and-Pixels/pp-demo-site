@@ -5,7 +5,6 @@ import {
   publishedNews,
   richTextFields,
   seoFields,
-  translationsField,
 } from './fragments'
 
 export const NEWS_PAGE_SIZE = 6
@@ -38,7 +37,6 @@ export const newsArticleQuery = /* groq */ `*[${publishedNews} && slug.current =
   "categories": categories[]->${newsCategoryFields},
   "author": author->{_id, _type, name, role, bio, image{${imageFields}}},
   seo${seoFields},
-  ${translationsField},
   "related": *[${publishedNews} && _id != ^._id && references(^.categories[]._ref)] | order(publishedAt desc)[0...3]${newsCardFields},
   "latest": *[${publishedNews} && _id != ^._id] | order(publishedAt desc)[0...3]${newsCardFields}
 }`

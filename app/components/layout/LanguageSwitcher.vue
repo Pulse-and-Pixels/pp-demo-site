@@ -3,6 +3,7 @@
 withDefaults(defineProps<{block?: boolean}>(), {block: false})
 
 const {locale, locales, t} = useI18n()
+const route = useRoute()
 const switchLocalePath = useSwitchLocalePath()
 const localePath = useLocalePath()
 const missing = useMissingTranslations()
@@ -16,7 +17,12 @@ const items = computed(() =>
       active: l.code === locale.value,
       unavailable,
       // Filters such as ?category= use translated slugs, so they are not carried over
-      href: unavailable ? localePath('/', l.code) : switchLocalePath(l.code).split('?')[0] || '/',
+      href:
+        l.code === locale.value
+          ? route.path
+          : unavailable
+            ? localePath('/', l.code)
+            : switchLocalePath(l.code).split('?')[0] || '/',
     }
   }),
 )

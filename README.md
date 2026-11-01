@@ -56,7 +56,8 @@ The dataset has already been seeded. On a fresh dataset, run `yarn seed` in `pp-
 | `NUXT_PUBLIC_SANITY_PROJECT_ID` | no (default `40bhay7m`) | Sanity project ID |
 | `NUXT_PUBLIC_SANITY_DATASET` | no (default `production`) | Dataset name |
 | `NUXT_PUBLIC_SANITY_API_VERSION` | no (default `2025-02-19`) | Keep in sync with `pp-demo-studio/src/env.ts` |
-| `NUXT_PUBLIC_SITE_URL` | in production | Public URL, used for canonical URLs, Open Graph, sitemap and robots.txt. Site settings → *Production URL* takes precedence. |
+| `NUXT_PUBLIC_SITE_URL` | in production | Public URL, used for canonical URLs, Open Graph, sitemap and robots.txt. Site settings → *Production URL* takes precedence. Also the base for hreflang and canonical links, read at **build time**. |
+| `NUXT_PUBLIC_I18N_BASE_URL` | optional | Runtime override for the hreflang/canonical base URL, for when `NUXT_PUBLIC_SITE_URL` wasn't set during the build. |
 | `NUXT_SANITY_VISUAL_EDITING_TOKEN` | for preview | Sanity API token with the **Viewer** role. **Server-side only, never prefix it with `NUXT_PUBLIC_`.** Without it, the site builds as a public-only site with no preview routes or overlays. |
 | `NUXT_SANITY_STUDIO_URL` | for preview | URL of the Studio that hosts the Presentation tool (default `http://localhost:3333`) |
 
@@ -140,6 +141,7 @@ The automated checks run against the dev server and use your Sanity CLI login:
 yarn dev                    # terminal 1
 yarn verify:preview         # draft isolation, cookies, proxy, stega, CDN
 yarn verify:source-maps     # clicks on referenced content open the referenced document
+LANGUAGE=nl yarn verify:source-maps   # same for the Dutch homepage
 ```
 
 `verify:preview` creates a temporary draft of the homepage and a preview secret, then deletes both.
@@ -156,6 +158,34 @@ Manual walkthrough (requires a Studio login):
 8. Publish the document. The public site picks up the change once the CDN refreshes (usually within seconds).
 
 To leave preview mode in a normal browser tab, use the *Exit preview* button, or visit `/preview/disable`.
+
+## Languages
+
+The site is available in **English** (default, no prefix) and **Dutch** (`/nl`).
+
+| English | Dutch |
+| --- | --- |
+| `/` | `/nl` |
+| `/about` | `/nl/over-ons` (each page has its own slug per language) |
+| `/news`, `/news/designing-for-calm` | `/nl/nieuws`, `/nl/nieuws/ontwerpen-voor-rust` |
+| `/products`, `/products/polaris-desk-lamp` | `/nl/producten`, `/nl/producten/polaris-bureaulamp` |
+
+**In the Studio**, translations are separate documents per language, managed with [`@sanity/document-internationalization`](https://github.com/sanity-io/plugins/tree/main/plugins/%40sanity/document-internationalization):
+
+- Every content type has a hidden `language` field, and the desk lists each type per language.
+- Use **Translations** in the document toolbar to create or open the other language version. Each version has its own slug, page builder layout and publish state.
+- Reference pickers only offer documents in the same language, and slugs only need to be unique within a language.
+- Site settings exist once per language (`siteSettings` and `siteSettings-nl`). Navigation, footer and listing page texts are translated there.
+- The Presentation tool understands `/nl` routes and opens the matching Dutch document.
+
+**On the website**, routing, `<html lang>`, hreflang alternates and UI text come from [`@nuxtjs/i18n`](https://i18n.nuxtjs.org):
+
+- Every GROQ query is scoped by a `$language` parameter that follows the current locale (see `useContent`).
+- The layout looks up the current document's translations (`useRouteTranslations`), so the EN | NL switcher and hreflang links go straight to the translated URL. If a page has no translation, the switcher goes to that language's homepage.
+- Fixed interface text (labels, buttons, empty states, accessibility text) lives in `i18n/locales/en.json` and `nl.json`. Everything else comes from Sanity.
+- Dates and prices are formatted per language: "14 October 2026" / "14 oktober 2026", "€189" / "€ 189".
+
+**Adding a language** means adding it in four places: `pp-demo-studio/src/languages.ts` (languages and routes), `i18n.locales` and `i18n.pages` in `nuxt.config.ts`, the `routes` map in `app/utils/links.ts`, and a new `i18n/locales/<code>.json`. Then create site settings for the new language in the Studio.
 
 ## Project structure
 
@@ -180,6 +210,7 @@ pp-demo-site/
 ├─ server/
 │  ├─ middleware/cache-headers.ts
 │  └─ routes/                  sitemap.xml, robots.txt
+├─ i18n/locales/               UI text per language (en.json, nl.json)
 ├─ scripts/                    verify-preview.mjs, verify-source-maps.mjs
 └─ nuxt.config.ts
 ```

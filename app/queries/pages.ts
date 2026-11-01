@@ -1,4 +1,4 @@
-import {pageBuilderFields, seoFields, translationsField} from './fragments'
+import {pageBuilderFields, seoFields} from './fragments'
 
 export const HOME_SLUG = 'home'
 
@@ -10,6 +10,5 @@ export const pageBySlugQuery = /* groq */ `*[_type == "page" && slug.current == 
   title,
   "slug": slug.current,
   seo${seoFields},
-  ${pageBuilderFields},
-  ${translationsField}
+  ${pageBuilderFields}
 }`

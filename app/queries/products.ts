@@ -6,7 +6,6 @@ import {
   publishedProducts,
   richTextFields,
   seoFields,
-  translationsField,
 } from './fragments'
 
 /** Products overview with optional category filter and free-text search. */
@@ -37,7 +36,6 @@ export const productQuery = /* groq */ `*[${publishedProducts} && slug.current =
   specifications[]{_key, label, value},
   cta${ctaFields},
   seo${seoFields},
-  ${translationsField},
   "related": *[${publishedProducts} && _id != ^._id && references(^.categories[]._ref)] | order(featured desc, name asc)[0...4]${productCardFields},
   "others": *[${publishedProducts} && _id != ^._id] | order(featured desc, name asc)[0...4]${productCardFields}
 }`

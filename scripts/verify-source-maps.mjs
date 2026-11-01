@@ -14,7 +14,7 @@ const jiti = createJiti(import.meta.url)
 const {pageBySlugQuery} = await jiti.import('../app/queries/pages.ts')
 const token = JSON.parse(readFileSync(`${homedir()}/.config/sanity/config.json`, 'utf8')).authToken
 const client = createClient({projectId: '40bhay7m', dataset: 'production', apiVersion: '2025-02-19', token, useCdn: false})
-const {result, resultSourceMap} = await client.fetch(pageBySlugQuery, {slug: 'home'}, {perspective: 'drafts', resultSourceMap: 'withKeyArraySelector', filterResponse: false})
+const {result, resultSourceMap} = await client.fetch(pageBySlugQuery, {slug: 'home', language: process.env.LANGUAGE || 'en'}, {perspective: 'drafts', resultSourceMap: 'withKeyArraySelector', filterResponse: false})
 const at = (resultPath) => resolveEditInfo({resultPath, resultSourceMap, studioUrl: 'http://localhost:3333'})
 const idx = (type) => result.pageBuilder.findIndex((b) => b._type === type)
 const cases = [

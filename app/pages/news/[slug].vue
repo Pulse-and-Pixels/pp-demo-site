@@ -12,7 +12,6 @@ const {data: article, error} = await useContent<ArticleWithRelated>(newsArticleQ
 assertContent(article.value, error.value, 'Article')
 
 const editAttr = useEditAttr()
-useDocumentTranslations(() => article.value?.translations)
 
 // Same-category articles first, topped up with the latest ones
 const related = computed(() => {

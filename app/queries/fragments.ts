@@ -67,12 +67,6 @@ export const testimonialFields = /* groq */ `{_id, quote, name, role, company, r
 const publishedNews = /* groq */ `_type == "newsArticle" && defined(slug.current) && language == $language`
 const publishedProducts = /* groq */ `_type == "product" && defined(slug.current) && language == $language`
 
-/** Slugs of all language versions of the current document, for the language switcher. */
-export const translationsField = /* groq */ `"translations": *[_type == "translation.metadata" && references(^._id)][0].translations[]{
-  language,
-  "slug": value->slug.current
-}`
-
 /** Items for collection blocks: manual selection, featured, by category or latest. Trimmed to `limit` in the component. */
 const productItems = /* groq */ `select(
   mode == "manual" => items[]->${productCardFields},

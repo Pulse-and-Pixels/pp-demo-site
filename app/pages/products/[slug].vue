@@ -13,7 +13,6 @@ assertContent(product.value, error.value, 'Product')
 
 const {data: settings} = useSiteSettings()
 const editAttr = useEditAttr()
-useDocumentTranslations(() => product.value?.translations)
 
 const images = computed(() => product.value?.images?.filter((image) => image.asset) ?? [])
 const activeIndex = ref(0)

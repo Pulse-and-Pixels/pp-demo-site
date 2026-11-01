@@ -9,7 +9,6 @@ const {data: page, error} = await useContent<Page>(pageBySlugQuery, {slug: props
 assertContent(page.value, error.value)
 
 usePageSeo(() => page.value && {title: page.value.title, seo: page.value.seo})
-useDocumentTranslations(() => page.value?.translations)
 const {t} = useI18n()
 
 // The first hero renders the page's <h1>; otherwise provide one for assistive tech

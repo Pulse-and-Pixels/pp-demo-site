@@ -81,7 +81,6 @@ export interface NewsCard {
 }
 
 export interface NewsArticle extends NewsCard {
-  translations?: Translation[] | null
   body?: RichText
   author?: Author | null
   seo?: Seo
@@ -104,7 +103,6 @@ export interface ProductCard {
 }
 
 export interface Product extends Omit<ProductCard, 'image'> {
-  translations?: Translation[] | null
   description?: RichText
   images?: (SanityImage & {_key: string})[]
   specifications?: {_key: string; label: string; value: string}[]
@@ -257,7 +255,6 @@ export interface Page {
   _id: string
   _type: 'page'
   language?: string
-  translations?: Translation[] | null
   title: string
   slug: string
   seo?: Seo

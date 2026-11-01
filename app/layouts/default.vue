@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const {data: settings} = await useSiteSettings()
+await useRouteTranslations()
 const {t} = useI18n()
 </script>
 
